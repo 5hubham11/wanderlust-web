@@ -15,9 +15,9 @@ app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
  
-const MONGO_URL = process.env.MONGO_URL;
+const MONGO_URL = process.env.MONGO_URL || process.env.ATLASDB_URL;
 if (!MONGO_URL) {
-  throw new Error("MONGO_URL environment variable is required");
+  throw new Error("MONGO_URL or ATLASDB_URL environment variable is required");
 }
  
 const port = process.env.PORT || 8080;
