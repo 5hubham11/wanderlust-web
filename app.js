@@ -13,15 +13,12 @@ const ejsMate=require("ejs-mate");
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
-const MONGO_URL = 'mongodb://127.0.0.1:27017/wanderlust';
  
-app.get("/",(req,res)=>{
-    console.log("testing");
-    res.send("Testing");
-})
+const MONGO_URL = process.env.MONGO_URL;
+ 
 const port=8080;
 app.listen(port ,()=>{
-    console.log("Server is working");
+     app.redirect("/listing");
 })
 
 main()
@@ -35,22 +32,7 @@ async function main() {
     await mongoose.connect(MONGO_URL);
 }
 
-// app.get("/testListing",async(req,res)=>{
-//     console.log("testing");
-//     res.send("Working");
-//     let sampleList=new Listing({
-//         little:"My new Vill",
-//         description:"By the beach",
-//         price: 1200,
-//         location:"calangute,Goa",
-//         country:"India",
-//     });
-//     await sampleList.save();
-//     console.log("sample save was saved");
-// }); 
-
-
-//index Rought
+ 
 app.get("/listing",async(req,res)=>{
     const allListing=await Listing.find({});
     res.render("listings/index.ejs",{allListing});
