@@ -16,27 +16,31 @@ app.use(express.static(path.join(__dirname,"/public")));
  
 const MONGO_URL = process.env.MONGO_URL;
  
-const port=8080;
-app.listen(port ,()=>{
-     app.redirect("/listing");
-})
+const port = process.env.PORT || 8080;
+
+app.get("/", (req, res) => {
+    res.redirect("/listing");
+});
 
 main()
-    .then(()=>{
-        console.log("Connected sucsess");
+    .then(() => {
+        console.log("Connected success");
+        app.listen(port, () => {
+            console.log(`Server running on port ${port}`);
+        });
     })
-    .catch((err)=>{
-        console.log(err);
-    })
+    .catch((err) => {
+        console.error(err);
+    });
+
 async function main() {
     await mongoose.connect(MONGO_URL);
 }
 
- 
-app.get("/listing",async(req,res)=>{
-    const allListing=await Listing.find({});
-    res.render("listings/index.ejs",{allListing});
-}) ;
+app.get("/listing", async (req, res) => {
+    const allListing = await Listing.find({});
+    res.render("listings/index.ejs", { allListing });
+});
 //new listing
 app.get("/listings/new",async(req,res)=>{
      res.render("listings/new.ejs")
@@ -73,10 +77,9 @@ app.put("/listings/:id",async(req,res)=>{
 })
 //delete
     
-app.delete("/listing/:id/delete",async(req,res)=>{
-    const {id}=req.params;
-    let deletedList=await Listing.findByIdAndDelete(id);
+app.delete("/listing/:id/delete", async (req, res) => {
+    const { id } = req.params;
+    let deletedList = await Listing.findByIdAndDelete(id);
     console.log(deletedList);
-    res.redirect("/Listing");
-     
-})
+    res.redirect("/listing");
+});
