@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express=require("express");
 const app=express();
 const mongoose= require("mongoose");
@@ -15,6 +16,9 @@ app.use(express.static(path.join(__dirname,"/public")));
 
  
 const MONGO_URL = process.env.MONGO_URL;
+if (!MONGO_URL) {
+  throw new Error("MONGO_URL environment variable is required");
+}
  
 const port = process.env.PORT || 8080;
 
